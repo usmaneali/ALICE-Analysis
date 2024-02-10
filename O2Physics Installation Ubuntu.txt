@@ -1,0 +1,68 @@
+****************************************************************** Installing O2Physics *******************************************************************
+
+sudo apt update && sudo apt upgrade -yy
+
+sudo apt install -y curl libcurl4-gnutls-dev build-essential gfortran libmysqlclient-dev xorg-dev libglu1-mesa-dev libfftw3-dev libxml2-dev git unzip autoconf automake autopoint texinfo gettext libtool libtool-bin pkg-config bison flex libperl-dev libbz2-dev swig liblzma-dev libnanomsg-dev rsync lsb-release environment-modules libglfw3-dev libtbb-dev python3-dev python3-venv python3-pip libncurses-dev software-properties-common
+
+sudo add-apt-repository ppa:alisw/ppa  
+sudo apt install python3-alibuild
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+vi .bashrc
+
+****  Add below lines to .bashrc file and save it  ****
+
+export ALIBUILD_WORK_DIR="$HOME/alice/sw"
+eval "`alienv shell-helper`"
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+mkdir -p ~/alice
+cd ~/alice
+
+sudo aliBuild init O2@dev --defaults o2
+sudo aliBuild init O2Physics@master --defaults o2
+
+sudo aliBuild build O2Physics --defaults o2
+
+sudo alienv enter O2Physics/latest
+
+******************************************************************* Updating O2Physics ********************************************************************
+
+cd alice/alidist	&& 	cd alice/O2Physics
+
+sudo git checkout master
+sudo git pull --rebase upstream master
+
+................................ OR ................................
+
+sudo git fetch --all
+sudo git reset --hard upstream/master
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+cd alice/O2
+
+sudo git checkout dev
+sudo git pull --rebase upstream dev
+
+................................ OR ................................
+
+sudo git fetch --all
+sudo git reset --hard upstream/dev
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+cd alice
+sudo aliBuild build O2Physics --defaults o2
+
+******************************************************************* Running Tutorials *********************************************************************
+
+o2-analysistutorial-histograms --aod-file AO2D.root -b
+
+o2-analysistutorial-histograms | o2-analysis-trackselection | o2-analysis-trackextension | o2-analysis-pid-tpc | o2-analysis-pid-tof | o2-analysis-centrality-table | o2-analysis-event-selection | o2-analysis-multiplicity-table | o2-analysis-timestamp -b --aod-file AO2D.root --add-qa 1
+
+o2-analysis-event-selection | o2-analysis-trackselection | o2-analysis-trackextension | o2-analysis-pid-tpc | o2-analysis-pid-tof | o2-analysis-centrality-table | o2-analysis-multiplicity-table | o2-analysis-timestamp -b --aod-file AO2D.root --add-qa 1
+
+
